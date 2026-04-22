@@ -1,0 +1,368 @@
+commit_message,date,lines_added,author,week,year,year_week,commits_per_week
+"DEP: Correct dtype in `__array_finalize__` if _set_dtype=None (#31293)
+
+This avoids using the correct dtype in array_finalize unless _set_dtype = None is set on the class.
+We also use this new path to make record arrays follow the main class deprecation correctly.
+
+This means that recarray does live in the future.",2026-04-21 14:57:21+00:00,62,Sebastian Berg,17,2026,2026-17,3
+DOC/TYP: remove outdated subsection on 0D arrays (#31288),2026-04-21 00:17:05+00:00,0,Joren Hammudoglu,17,2026,2026-17,3
+"MAINT: Bump pyrefly from 0.60.1 to 0.61.0 in /requirements (#31289)
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",2026-04-21 00:15:53+00:00,1,dependabot[bot],17,2026,2026-17,2
+"Merge pull request #31287 from numpy/dependabot/github_actions/actions/cache-5.0.5
+
+MAINT: Bump actions/cache from 5.0.4 to 5.0.5",2026-04-20 21:14:47+00:00,4,Joren Hammudoglu,17,2026,2026-17,3
+"MAINT: Bump actions/cache from 5.0.4 to 5.0.5
+
+Bumps [actions/cache](https://github.com/actions/cache) from 5.0.4 to 5.0.5.
+- [Release notes](https://github.com/actions/cache/releases)
+- [Changelog](https://github.com/actions/cache/blob/main/RELEASES.md)
+- [Commits](https://github.com/actions/cache/compare/668228422ae6a00e4ad889ee87cd7109ec5666a7...27d5ce7f107fe9357f9df03efb73ab90386fccae)
+
+---
+updated-dependencies:
+- dependency-name: actions/cache
+  dependency-version: 5.0.5
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-20 20:13:54+00:00,4,dependabot[bot],17,2026,2026-17,2
+DOC/TYP: Improved typing docs for ``ndarray`` (#31277),2026-04-20 14:57:20+00:00,18,Joren Hammudoglu,17,2026,2026-17,3
+"BUG,DEP: Change logic for ``arr.view()`` to use ``_set_dtype`` (#31234)
+
+This modifies the logic for `arr.view()` to:
+1. Use `arr._set_dtype(new_dtype)` for subclasses to have a simple way to migrate away from 2.
+2. Keep using `arr.dtype = new_dtype` if dtype is a setter property.
+3. If neither is defined, we now call `__array_finalize__` with a new array that has the new dtype+shape. (Previously `__array_finalize__` was skipped, a subclass that wanted to know this happened had to implememt a `dtype` attribute setter).
+
+The first two should be completely safe, with the only downside that we have to support `_set_dtype()` indefinitely :(.
+(Maybe a NumPy 3 can switch over to just using step 3 always, but that would be a big transition).
+
+OTOH, calling `__array_finalize__` with mismatching dtypes _could_ fail admitted.  I.e. `MaskedArrays` would fail for non-trivial cases (same itemsize, no structured dtypes) and even the trivial ones may give ""invalid value"" warnings due to the `_fill_value`.
+
+However, this is also arguably a fix.  If a class dealt with it before correctly, it implemented `.dtype` attribute setting.  And if not and it stumbles on it, it was likely subtly broken around `dtype` handling with views.",2026-04-20 07:38:29+00:00,220,Sebastian Berg,17,2026,2026-17,3
+"BUG: raise warning when `np.timedelta64()` is called (#31213)
+
+Also raise a DeprecationWarning when following codes are called without specific unit:
+    np.timedelta()
+    np.datetime()
+    np.datetime(""NaT"")
+
+Co-authored-by: Sebastian Berg <sebastian@sipsolutions.net>",2026-04-20 07:32:10+00:00,129,riku-sakamoto,17,2026,2026-17,1
+"ENH: Allow user-dtypes return views on `.conjugate()` (#31264)
+
+This uses the fact that if something doesn't define an imag, then conjugate() should be defined as a simple view (similar to .real).
+
+This is a follow-up of a previous PR, where I didn't implement this isn't really backportable.
+
+With this, QuadDType for example does return a view (and a complex new-style dtype can opt out this).
+
+This doesn't yet support for .conjugate() to return a view for complex numbers (which would make a lot of sense and could be added but take a bit more effort).
+
+Co-authored-by: Swayam <hawkempire007@gmail.com>",2026-04-20 07:26:13+00:00,13,Sebastian Berg,17,2026,2026-17,3
+BUG: Fix Stirling correction sign error in the BTPE algorithm (#31238),2026-04-17 19:58:08+00:00,259,Kate Hudson,16,2026,2026-16,1
+Merge pull request #31268 from numpy/dependabot/pip/requirements/pyrefly-0.60.1,2026-04-17 19:36:15+00:00,1,Joren Hammudoglu,16,2026,2026-16,6
+Merge pull request #31267 from numpy/dependabot/github_actions/actions/upload-artifact-7.0.1,2026-04-17 19:05:18+00:00,6,Joren Hammudoglu,16,2026,2026-16,6
+Merge pull request #31266 from numpy/dependabot/github_actions/int128/hide-comment-action-1.55.0,2026-04-17 19:05:10+00:00,1,Joren Hammudoglu,16,2026,2026-16,6
+"MAINT: Bump pyrefly from 0.60.0 to 0.60.1 in /requirements
+
+Bumps [pyrefly](https://github.com/facebook/pyrefly) from 0.60.0 to 0.60.1.
+- [Release notes](https://github.com/facebook/pyrefly/releases)
+- [Commits](https://github.com/facebook/pyrefly/compare/0.60.0...0.60.1)
+
+---
+updated-dependencies:
+- dependency-name: pyrefly
+  dependency-version: 0.60.1
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-17 17:58:35+00:00,1,dependabot[bot],16,2026,2026-16,5
+"MAINT: Bump actions/upload-artifact from 7.0.0 to 7.0.1
+
+Bumps [actions/upload-artifact](https://github.com/actions/upload-artifact) from 7.0.0 to 7.0.1.
+- [Release notes](https://github.com/actions/upload-artifact/releases)
+- [Commits](https://github.com/actions/upload-artifact/compare/bbbca2ddaa5d8feaa63e36b76fdaad77386f024f...043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+
+---
+updated-dependencies:
+- dependency-name: actions/upload-artifact
+  dependency-version: 7.0.1
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-17 17:53:47+00:00,6,dependabot[bot],16,2026,2026-16,5
+"MAINT: Bump int128/hide-comment-action from 1.54.0 to 1.55.0
+
+Bumps [int128/hide-comment-action](https://github.com/int128/hide-comment-action) from 1.54.0 to 1.55.0.
+- [Release notes](https://github.com/int128/hide-comment-action/releases)
+- [Commits](https://github.com/int128/hide-comment-action/compare/7e00bd46796b28fdf74b2f4b0e4f0568bd024b00...42badf94b3efd95bf2138bd9c74da19203e83f40)
+
+---
+updated-dependencies:
+- dependency-name: int128/hide-comment-action
+  dependency-version: 1.55.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-17 17:53:36+00:00,1,dependabot[bot],16,2026,2026-16,5
+"MAINT: Bump actions/github-script from 8.0.0 to 9.0.0 (#31260)
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",2026-04-16 23:56:28+00:00,4,dependabot[bot],16,2026,2026-16,5
+ENH: mark ``_import_array`` function as inline (#31258),2026-04-16 20:12:21+00:00,1,Kumar Aditya,16,2026,2026-16,1
+"MAINT: Bump pyrefly from 0.59.1 to 0.60.0 in /requirements (#31245)
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",2026-04-16 12:20:39+00:00,1,dependabot[bot],16,2026,2026-16,5
+"BUG: Make a bug sweep for missing error handling, etc. (#31251)",2026-04-16 12:18:56+00:00,107,Sebastian Berg,16,2026,2026-16,1
+"TYP: ``fft.*fft``, ``fft.*fftn`` and ``fft.*fft2`` shape-typing and improved dtype support (#31226)",2026-04-14 23:18:17+00:00,1125,Joren Hammudoglu,16,2026,2026-16,6
+MAINT: fix ruff error (#31246),2026-04-14 20:43:56+00:00,1,Joren Hammudoglu,16,2026,2026-16,6
+BUG: Remove thread-local allocator cache implementation (#31237),2026-04-14 14:08:41+00:00,60,Nathan Goldbaum,16,2026,2026-16,1
+Merge pull request #31240 from Jah-yee/fix/sliding-window-axis-typing,2026-04-14 06:35:30+00:00,2,Joren Hammudoglu,16,2026,2026-16,6
+"TYP: fix sliding_window_view axis parameter typing
+
+The axis parameter now accepts int | tuple[int, ...] instead of just
+SupportsIndex, matching the documentation and implementation.
+
+Fixes #31233",2026-04-14 01:25:12+00:00,2,RoomWithOutRoof,16,2026,2026-16,1
+"BUG: incorrect temp elision for new-style (NEP 43) user-defined dtypes (#31193)
+
+Co-authored-by: Maarten Baert <maarten.baert@keysight.com>
+Co-authored-by: Sebastian Berg <sebastianb@nvidia.com>",2026-04-13 11:23:30+00:00,4,Maarten Baert,16,2026,2026-16,1
+TYP: ``fft.[i]fftshift`` shape-typing (#31225),2026-04-12 15:50:20+00:00,17,Joren Hammudoglu,15,2026,2026-15,22
+TYP: ``lib.NumpyVersion`` final instance attributes and pos-only dunder params (#31224),2026-04-12 15:48:33+00:00,19,Joren Hammudoglu,15,2026,2026-15,22
+TYP: ``real_if_close`` and ``nan_to_num`` shape-typing (#31223),2026-04-12 15:46:48+00:00,137,Joren Hammudoglu,15,2026,2026-15,22
+TYP: ``diag_indices[_from]`` shape-typing (#31219),2026-04-12 15:45:32+00:00,47,Joren Hammudoglu,15,2026,2026-15,22
+"Merge pull request #31114 from nakul-krishnakumar/ruff-lint-e501
+
+MAINT: Enable linting with ruff E501",2026-04-11 23:22:03+00:00,7,Charles Harris,15,2026,2026-15,8
+"Merge pull request #31220 from jorenham/typing/expand_dims
+
+TYP: ``expand_dims`` shape-typing",2026-04-11 16:00:52+00:00,72,Charles Harris,15,2026,2026-15,8
+"Merge pull request #31218 from jorenham/typing/ix_
+
+TYP: ``ix_`` shape-typing and fix for boolean input",2026-04-11 15:58:42+00:00,141,Charles Harris,15,2026,2026-15,8
+"Merge pull request #31217 from jorenham/typing/pad
+
+TYP: ``pad`` shape-typing",2026-04-11 15:57:01+00:00,24,Charles Harris,15,2026,2026-15,8
+TYP: ``expand_dims`` shape-typing,2026-04-11 13:15:57+00:00,72,jorenham,15,2026,2026-15,5
+TYP: ``ix_`` shape-typing and fix for boolean input,2026-04-11 12:12:36+00:00,141,jorenham,15,2026,2026-15,5
+TYP: ``pad`` shape-typing,2026-04-11 11:06:55+00:00,24,jorenham,15,2026,2026-15,5
+"ENH: Improve performance of PyArray_FromAny and cleanup PyArray_ExtractDTypeAndDescriptor (#31099)
+
+Co-authored-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+Co-authored-by: Sebastian Berg <sebastian@sipsolutions.net>",2026-04-11 08:57:38+00:00,51,Pieter Eendebak,15,2026,2026-15,3
+"Merge pull request #31202 from jorenham/ruff-0.15.10
+
+MAINT: bump ``ruff`` to ``0.15.10``",2026-04-10 21:31:10+00:00,4,Charles Harris,15,2026,2026-15,8
+STY: fix two new ruff errors (``UP018``),2026-04-10 18:02:29+00:00,2,jorenham,15,2026,2026-15,5
+MAINT: bump ``ruff`` to ``0.15.10``,2026-04-10 18:01:05+00:00,2,jorenham,15,2026,2026-15,5
+"DEP: remove warnings from `read_rows` (#31113)
+
+Removed a warning from `read_rows` and its related tests, that was given about a change in empty line
+handling in NumPy 1.23.",2026-04-10 17:42:58+00:00,8,Joseph Mehdiyev,15,2026,2026-15,1
+"Merge pull request #31177 from seberg/no-deprecation-old-pickles
+
+DEP: Undo deprecation for ``np.dtype()`` signature used by old pickles",2026-04-10 12:08:26+00:00,38,Charles Harris,15,2026,2026-15,8
+"TST: Add tests for PyUFunc_ReplaceLoopBySignature (#31097)
+
+Co-authored-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+Co-authored-by: Sebastian Berg <sebastian@sipsolutions.net>",2026-04-10 07:46:34+00:00,96,Pieter Eendebak,15,2026,2026-15,3
+BUG: Use dict to store ufunc loops (fixes thread-safety) (#31184),2026-04-09 21:28:49+00:00,72,Sebastian Berg,15,2026,2026-15,4
+Refine int checks (a bit annoyingly).,2026-04-09 19:12:07+00:00,17,Sebastian Berg,15,2026,2026-15,4
+Merge pull request #31189 from numpy/dependabot/github_actions/pypa/cibuildwheel-3.4.1,2026-04-09 19:14:52+00:00,2,Joren Hammudoglu,15,2026,2026-15,22
+Merge pull request #31190 from numpy/dependabot/pip/requirements/pyrefly-0.59.1,2026-04-09 19:14:43+00:00,1,Joren Hammudoglu,15,2026,2026-15,22
+"MAINT: Bump pyrefly from 0.59.0 to 0.59.1 in /requirements
+
+Bumps [pyrefly](https://github.com/facebook/pyrefly) from 0.59.0 to 0.59.1.
+- [Release notes](https://github.com/facebook/pyrefly/releases)
+- [Commits](https://github.com/facebook/pyrefly/compare/0.59.0...0.59.1)
+
+---
+updated-dependencies:
+- dependency-name: pyrefly
+  dependency-version: 0.59.1
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-09 17:56:21+00:00,1,dependabot[bot],15,2026,2026-15,7
+"MAINT: Bump pypa/cibuildwheel from 3.4.0 to 3.4.1
+
+Bumps [pypa/cibuildwheel](https://github.com/pypa/cibuildwheel) from 3.4.0 to 3.4.1.
+- [Release notes](https://github.com/pypa/cibuildwheel/releases)
+- [Changelog](https://github.com/pypa/cibuildwheel/blob/main/docs/changelog.md)
+- [Commits](https://github.com/pypa/cibuildwheel/compare/ee02a1537ce3071a004a6b08c41e72f0fdc42d9a...8d2b08b68458a16aeb24b64e68a09ab1c8e82084)
+
+---
+updated-dependencies:
+- dependency-name: pypa/cibuildwheel
+  dependency-version: 3.4.1
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-09 17:55:21+00:00,2,dependabot[bot],15,2026,2026-15,7
+"BUG: raise OverflowError on datetime64 unit conversion overflow (#31085)
+
+Co-authored-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>",2026-04-09 17:33:46+00:00,157,jbrockmendel,15,2026,2026-15,1
+"ENH: tweak timedelta deprecation message  (#31107)
+
+Co-authored-by: Davis Bennett <davis.v.bennett@gmail.com>",2026-04-09 17:00:34+00:00,88,riku-sakamoto,15,2026,2026-15,1
+DOC: clarify wording in quickstart ix_() section (#31149),2026-04-09 16:57:10+00:00,2,agp19d,15,2026,2026-15,1
+Merge pull request #31137 from Noxaster/fix-numpy/finalize-UP031,2026-04-09 08:25:48+00:00,65,Joren Hammudoglu,15,2026,2026-15,22
+"Merge pull request #30870 from Rishabh-git10/enh-polyvalnd
+
+ENH: Add N-D evaluation (valnd) to polynomial module",2026-04-09 01:51:42+00:00,515,Charles Harris,15,2026,2026-15,8
+"Apply suggestions from code review
+
+Co-authored-by: Joren Hammudoglu <jhammudoglu@gmail.com>",2026-04-08 20:59:57+00:00,2,Noxaster,15,2026,2026-15,1
+Merge pull request #31187 from numpy/dependabot/pip/requirements/pyrefly-0.59.0,2026-04-08 19:09:56+00:00,1,Joren Hammudoglu,15,2026,2026-15,22
+Merge pull request #31188 from numpy/dependabot/pip/requirements/delvewheel-1.12.0,2026-04-08 19:09:47+00:00,1,Joren Hammudoglu,15,2026,2026-15,22
+"MAINT: Bump delvewheel from 1.11.2 to 1.12.0 in /requirements
+
+Bumps [delvewheel](https://github.com/adang1345/delvewheel) from 1.11.2 to 1.12.0.
+- [Changelog](https://github.com/adang1345/delvewheel/blob/master/CHANGELOG.md)
+- [Commits](https://github.com/adang1345/delvewheel/commits)
+
+---
+updated-dependencies:
+- dependency-name: delvewheel
+  dependency-version: 1.12.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-08 17:56:38+00:00,1,dependabot[bot],15,2026,2026-15,7
+"MAINT: Bump pyrefly from 0.58.0 to 0.59.0 in /requirements
+
+Bumps [pyrefly](https://github.com/facebook/pyrefly) from 0.58.0 to 0.59.0.
+- [Release notes](https://github.com/facebook/pyrefly/releases)
+- [Commits](https://github.com/facebook/pyrefly/compare/0.58.0...0.59.0)
+
+---
+updated-dependencies:
+- dependency-name: pyrefly
+  dependency-version: 0.59.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-08 17:56:30+00:00,1,dependabot[bot],15,2026,2026-15,7
+Merge pull request #31186 from neutrinoceros/depr/dtype-version,2026-04-08 09:12:07+00:00,1,Joren Hammudoglu,15,2026,2026-15,22
+DEPR: adjust dtype setter deprecation warning (incorrect numpy version),2026-04-08 08:22:24+00:00,1,Clément Robert,15,2026,2026-15,1
+"Merge pull request #31152 from andyfaff/ci
+
+CI: removes the need to install llvm",2026-04-08 06:10:28+00:00,12,Matti Picus,15,2026,2026-15,1
+"BUG: Fix matvec/vecmat in-place aliasing (out=input produces zeros) (#31150)
+
+`np.matvec(A, b, out=b)` returns all zeros because matvec and vecmat are missing the ~NPY_ITER_OVERLAP_ASSUME_ELEMENTWISE output flag that matmul already has. Without it the iterator ends up skipping the overlap check when out is the same array as an input so no temporary copy is made and BLAS gemv clobbers the input buffer.
+
+This PR adds the same fix to matvec and vecmat and adds regression testing for both.",2026-04-07 20:07:28+00:00,32,Ijtihed Kilani,15,2026,2026-15,1
+"Merge pull request #31183 from numpy/dependabot/github_actions/prefix-dev/setup-pixi-0.9.5
+
+MAINT: Bump prefix-dev/setup-pixi from 0.9.4 to 0.9.5",2026-04-07 19:13:15+00:00,1,Charles Harris,15,2026,2026-15,8
+"MAINT: Bump prefix-dev/setup-pixi from 0.9.4 to 0.9.5
+
+Bumps [prefix-dev/setup-pixi](https://github.com/prefix-dev/setup-pixi) from 0.9.4 to 0.9.5.
+- [Release notes](https://github.com/prefix-dev/setup-pixi/releases)
+- [Commits](https://github.com/prefix-dev/setup-pixi/compare/a0af7a228712d6121d37aba47adf55c1332c9c2e...1b2de7f3351f171c8b4dfeb558c639cb58ed4ec0)
+
+---
+updated-dependencies:
+- dependency-name: prefix-dev/setup-pixi
+  dependency-version: 0.9.5
+  dependency-type: direct:production
+  update-type: version-update:semver-patch
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-07 17:55:15+00:00,1,dependabot[bot],15,2026,2026-15,7
+REV: Manual revert of float16 svml use (#31178),2026-04-07 16:00:42+00:00,1,Sebastian Berg,15,2026,2026-15,4
+TYP: fix ``np.shape`` assignability issue for python lists (#31171),2026-04-07 15:57:36+00:00,17,Joren Hammudoglu,15,2026,2026-15,22
+MAINT: Rename ppc64le and s390x workflow (#31121),2026-04-07 15:28:14+00:00,0,Aleksei Nikiforov,15,2026,2026-15,1
+TYP: ``all`` and ``any`` shape-typing (#31170),2026-04-07 15:22:29+00:00,151,Joren Hammudoglu,15,2026,2026-15,22
+"DEP: Undo deprecation for ``np.dtype()`` signature used by old pickles
+
+Some (very) old pickles pass align=0, copy=1 as integers rather than
+bools.
+This just assumes no user will really do that, and allows it.
+
+It may be possible to also use `copyreg` to work around it, but
+since it is a rather specific signature this seems easier/just as
+well.",2026-04-07 12:49:44+00:00,23,Sebastian Berg,15,2026,2026-15,4
+DEV: avoid byte-compiling every .py file on a `spin build` call. (#31173),2026-04-07 12:55:31+00:00,6,Ralf Gommers,15,2026,2026-15,1
+"DEP: Deprecate setting the dtype of an numpy.ndarray (#29575)
+
+Co-authored-by: Sebastian Berg <sebastian@sipsolutions.net>",2026-04-07 08:16:45+00:00,81,Pieter Eendebak,15,2026,2026-15,3
+DOC: release notes for the latest shape-typing improvements (#31172),2026-04-07 02:38:59+00:00,22,Joren Hammudoglu,15,2026,2026-15,22
+TYP: ``partition`` shape-typing (#31169),2026-04-07 02:34:02+00:00,31,Joren Hammudoglu,15,2026,2026-15,22
+"TYP: ``arg{min,max}`` shape-typing (#31166)",2026-04-07 02:32:32+00:00,222,Joren Hammudoglu,15,2026,2026-15,22
+TYP: ``diagonal`` and ``ndarray.diagonal`` shape-typing (#31165),2026-04-07 02:31:40+00:00,73,Joren Hammudoglu,15,2026,2026-15,22
+"TYP: ``ndarray.cum{prod,sum}`` shape-typing and improved dtypes (#31164)",2026-04-07 02:30:19+00:00,381,Joren Hammudoglu,15,2026,2026-15,22
+"TYP: ``[a]min``, ``[a]max``, ``ptp``: shape-typing and improved dtypes (#31163)",2026-04-07 01:46:59+00:00,708,Joren Hammudoglu,15,2026,2026-15,22
+Merge pull request #31168 from numpy/dependabot/github_actions/int128/hide-comment-action-1.54.0,2026-04-06 18:50:25+00:00,1,Joren Hammudoglu,15,2026,2026-15,22
+Merge pull request #31167 from numpy/dependabot/github_actions/astral-sh/setup-uv-8.0.0,2026-04-06 18:32:06+00:00,3,Joren Hammudoglu,15,2026,2026-15,22
+"MAINT: Bump int128/hide-comment-action from 1.53.0 to 1.54.0
+
+Bumps [int128/hide-comment-action](https://github.com/int128/hide-comment-action) from 1.53.0 to 1.54.0.
+- [Release notes](https://github.com/int128/hide-comment-action/releases)
+- [Commits](https://github.com/int128/hide-comment-action/compare/c0b5ed56339ed2285f922a5da4444b55270c43f3...7e00bd46796b28fdf74b2f4b0e4f0568bd024b00)
+
+---
+updated-dependencies:
+- dependency-name: int128/hide-comment-action
+  dependency-version: 1.54.0
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-06 17:55:53+00:00,1,dependabot[bot],15,2026,2026-15,7
+"MAINT: Bump astral-sh/setup-uv from 7.6.0 to 8.0.0
+
+Bumps [astral-sh/setup-uv](https://github.com/astral-sh/setup-uv) from 7.6.0 to 8.0.0.
+- [Release notes](https://github.com/astral-sh/setup-uv/releases)
+- [Commits](https://github.com/astral-sh/setup-uv/compare/37802adc94f370d6bfd71619e3f0bf239e1f3b78...cec208311dfd045dd5311c1add060b2062131d57)
+
+---
+updated-dependencies:
+- dependency-name: astral-sh/setup-uv
+  dependency-version: 8.0.0
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>",2026-04-06 17:55:16+00:00,3,dependabot[bot],15,2026,2026-15,7
+TYP: ``tile``: accept numpy scalars and arrays as second argument (#31161),2026-04-06 01:50:49+00:00,3,Joren Hammudoglu,15,2026,2026-15,22
+TYP: ``sum`` and ``prod`` shape-typing and improved dtypes (#31160),2026-04-06 01:49:41+00:00,1213,Joren Hammudoglu,15,2026,2026-15,22
+Merge pull request #31157 from Ladsgroup/main,2026-04-05 16:34:48+00:00,4,Joren Hammudoglu,14,2026,2026-14,5
+"Revert memoize change
+
+It is correct: https://en.wikipedia.org/wiki/Memoization",2026-04-05 15:31:09+00:00,3,Amir Sarabadani,14,2026,2026-14,2
+"DOC: Fix typos
+
+This is done via a script I wrote to report typos and after I checked
+them multiple times manually, I applied the correct ones.",2026-04-05 14:42:02+00:00,7,Amir Sarabadani,14,2026,2026-14,2
+TYP: ``std`` and ``var`` shape-typing and improved dtypes (#31154),2026-04-05 13:38:42+00:00,778,Joren Hammudoglu,14,2026,2026-14,5
+MAINT: bump ``mypy`` to ``1.20.0`` (#31153),2026-04-05 13:36:15+00:00,101,Joren Hammudoglu,14,2026,2026-14,5
+TYP: ``mean`` and ``ndarray.mean`` shape-typing and improved dtypes (#31151),2026-04-04 22:38:40+00:00,300,Joren Hammudoglu,14,2026,2026-14,5
+CI: correct the pkgconf_requirements name,2026-04-04 21:25:54+00:00,1,Andrew Nelson,14,2026,2026-14,4
+CI: change the platform detection,2026-04-04 21:18:03+00:00,1,Andrew Nelson,14,2026,2026-14,4
+CI: refactor windows_arm64_steps,2026-04-04 21:06:26+00:00,7,Andrew Nelson,14,2026,2026-14,4
+CI: refactor windows_arm64_steps,2026-04-04 21:05:58+00:00,6,Andrew Nelson,14,2026,2026-14,4
+TYP: ``nonzero`` and single-arg ``where`` shape-typing (#31143),2026-04-04 17:33:44+00:00,112,Joren Hammudoglu,14,2026,2026-14,5
+"Merge pull request #31148 from jorenham/typing/fromregex
+
+TYP: ``fromregex`` shape-typing",2026-04-04 17:32:13+00:00,11,Charles Harris,14,2026,2026-14,3
+TYP: ``fromregex`` shape-typing,2026-04-04 16:54:43+00:00,11,jorenham,14,2026,2026-14,1
+"Merge pull request #31147 from jorenham/typing/atleast_nd
+
+TYP: ``atleast_{1,2,3}d`` shape-typing",2026-04-04 16:47:06+00:00,40,Charles Harris,14,2026,2026-14,3
+"Merge pull request #31146 from jorenham/typing/deprecate-timedeltta64-unitless-arithmetic
+
+TYP: deprecate ``timedelta64`` unitless arithmetic",2026-04-04 16:45:38+00:00,86,Charles Harris,14,2026,2026-14,3
